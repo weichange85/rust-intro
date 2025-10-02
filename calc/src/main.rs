@@ -1,6 +1,11 @@
 //web microservice for a calculator
 use actix_web::{get, web, App, HttpServer, Responder};
 
+#[get("/")]
+async fn base_greet() -> impl Responder {
+    format!("This app is working!")
+}
+
 #[get("/hello/{name}")]
 async fn greet(name: web::Path<String>) -> impl Responder {
     format!("Hello {name}!")
@@ -35,12 +40,13 @@ async fn divide(info: web::Path<(i32, i32)>) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
+            .service(base_greet)
             .service(greet)
             .service(add)
             .service(subtract)
             .service(multiply)
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("0.0.0.0", 3000))?
     .run()
     .await
 }
